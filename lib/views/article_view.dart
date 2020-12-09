@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:news_app/views/home.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-
 class ArticleView extends StatefulWidget {
-
   final String webUrl;
 
   const ArticleView({Key key, this.webUrl}) : super(key: key);
@@ -15,13 +14,11 @@ class ArticleView extends StatefulWidget {
 }
 
 class _ArticleViewState extends State<ArticleView> {
-
   final Completer<WebViewController> _webController =
-  Completer<WebViewController>();
+      Completer<WebViewController>();
 
   @override
   Widget build(BuildContext context) {
-
     Map<int, Color> color = {
       50: Color.fromRGBO(4, 131, 184, .1),
       100: Color.fromRGBO(4, 131, 184, .2),
@@ -40,9 +37,13 @@ class _ArticleViewState extends State<ArticleView> {
         appBar: AppBar(
           actions: [
             IconButton(
-              icon: const Icon(Icons.add_alert),
+              icon: const Icon(Icons.home),
               tooltip: 'Show Snackbar',
               onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Home()),
+                );
               },
             ),
           ],
@@ -62,18 +63,17 @@ class _ArticleViewState extends State<ArticleView> {
           ),
           elevation: 0.0,
         ),
-          body: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: WebView(
-              initialUrl: widget.webUrl,
-              onWebViewCreated: ((WebViewController webViewController){
-                _webController.complete(webViewController);
-              }),
-            ),
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: WebView(
+            initialUrl: widget.webUrl,
+            onWebViewCreated: ((WebViewController webViewController) {
+              _webController.complete(webViewController);
+            }),
           ),
+        ),
       ),
-
     );
   }
 }

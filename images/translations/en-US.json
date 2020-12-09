@@ -1,0 +1,19 @@
+{
+  "demo_title" : "Title",
+  "settings" : "Settings",
+  "switch_language" : "Zu Deutsch wechseln",
+  "welcome" : "Welcome",
+  "profile" : "My profile",
+  "change_country" : "Change language",
+  "log_out" : "Log out",
+
+  "business" : "Business",
+  "entertainment" : "Entertainment",
+  "general" : "General",
+  "health" : "Health",
+  "science" : "Science",
+  "sports" : "Sports",
+  "technology" : "Technology",
+  "stock_tracker" : "Stock tracker",
+  "my_stocks" : "My Stocks"
+}

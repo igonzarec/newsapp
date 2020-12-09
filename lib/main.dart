@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/views/home.dart';
+import 'package:news_app/views/login_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
+
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    EasyLocalization(
+        supportedLocales: [Locale('en', 'US'), Locale('de', 'DE'),],
+        path: 'images/translations',
+        startLocale: Locale('en', 'US'),
+        child: MyApp()
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -31,7 +40,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: myColor,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Home(),
+      home: LoginScreen(),
     );
   }
 }

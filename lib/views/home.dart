@@ -1,43 +1,65 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:news_app/helper/article_fetch.dart';
-import 'package:news_app/helper/data.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:news_app/services/article_fetch.dart';
+import 'package:news_app/services/data.dart';
 import 'package:news_app/models/article_model.dart';
 import 'package:news_app/models/category_model.dart';
 import 'package:news_app/views/article_view.dart';
+import 'package:news_app/views/category_news.dart';
+import 'package:news_app/views/language_screen.dart';
+import 'package:news_app/views/login_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:news_app/views/stock_tracker_screen.dart';
+import 'globals.dart' as globals;
 
 class Home extends StatefulWidget {
+
+  String userName;
+  Home({this.userName});
+
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: <String>[
+      'email',
+      // 'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
+
+  Future<void> _handleSignOut() {
+    _googleSignIn.disconnect();
+    showMyDialog();
+    return null;
+  }
+
   List<CategoryModel> categories = new List<CategoryModel>();
   List<ArticleModel> articles = new List<ArticleModel>();
-  String pickedCountry = "us";
+
+  // String pickedCountry = "us";
   bool _loading = true;
 
   ///Scrollcontroller variables
   ScrollController _controller;
   String message = "";
-  static int page = 0;
   bool isLoading = false;
-
   int pagination = 5;
-
   int refreshVariable = 0;
-
   int loadMore = 0;
 
   @override
   void initState() {
     // TODO: implement initState
+
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
     categories = getCategories();
     getArticles();
-
+    globals.userName = widget.userName;
     super.initState();
   }
 
@@ -60,7 +82,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> getArticles() async {
-    articles = await ArticleFetch().getTopHeadLines(pickedCountry);
+    articles = await FetchArticles().getTopHeadLines(country: globals.language);
     print('the are new articles');
     setState(() {
       _loading = false;
@@ -94,67 +116,109 @@ class _HomeState extends State<Home> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               Container(
-                height: 300,
+                height: size.height * .38,
                 child: DrawerHeader(
                   child: Image(
                     fit: BoxFit.contain,
-                    image: AssetImage("images/drawer_gn_news_world_logo.png"),
+                    image: AssetImage("images/500_x_500_px_global_news_logo.png"),
                   ),
                   decoration: BoxDecoration(
                     color: Colors.black87,
                   ),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15, top: 15, bottom: 10),
+                child: Text("welcome".tr() + "!", style: TextStyle(fontSize: size.height * .025, fontWeight: FontWeight.bold),),
+              ),
               ListTile(
-                leading: Icon(Icons.account_box_rounded),
+                leading: Icon(Icons.home_filled),
                 trailing: Icon(Icons.arrow_forward_ios_sharp),
-                title: Text('My profile'),
+                title: Text("Start"),
                 onTap: () {
-                  // Update the state of the app.
-                  // ...
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Home()),
+                  );
+                },
+              ),
+
+              // ListTile(
+              //   leading: Icon(Icons.account_box_rounded),
+              //   trailing: Icon(Icons.arrow_forward_ios_sharp),
+              //   title: Text('profile'.tr()),
+              //   onTap: () {
+              //     // Update the state of the app.
+              //     // ...
+              //   },
+              // ),
+              // ListTile(
+              //   leading: Icon(Icons.ad_units_outlined),
+              //   trailing: Icon(Icons.arrow_forward_ios_sharp),
+              //   title: Text('My Notes'),
+              //   onTap: () {
+              //     // Update the state of the app.
+              //     // ...
+              //   },
+              // ),
+              // ListTile(
+              //   leading: Icon(Icons.add_comment_outlined),
+              //   trailing: Icon(Icons.arrow_forward_ios_sharp),
+              //   title: Text('Highlighted'),
+              //   onTap: () {
+              //     // Update the state of the app.
+              //     // ...
+              //   },
+              // ),
+              // ListTile(
+              //   leading: Icon(Icons.message_sharp),
+              //   trailing: Icon(Icons.arrow_forward_ios_sharp),
+              //   title: Text('Messaging'),
+              //   onTap: () {
+              //     // Update the state of the app.
+              //     // ...
+              //   },
+              // ),
+              ListTile(
+                leading: Icon(Icons.money),
+                trailing: Icon(Icons.arrow_forward_ios_sharp),
+                title: Text('stock_tracker'.tr()),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => StockTrackerScreen()),
+                  );
                 },
               ),
               ListTile(
-                leading: Icon(Icons.ad_units_outlined),
-                trailing: Icon(Icons.arrow_forward_ios_sharp),
-                title: Text('My Notes'),
-                onTap: () {
-                  // Update the state of the app.
-                  // ...
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.add_comment_outlined),
-                trailing: Icon(Icons.arrow_forward_ios_sharp),
-                title: Text('Highlighted'),
-                onTap: () {
-                  // Update the state of the app.
-                  // ...
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.message_sharp),
-                trailing: Icon(Icons.arrow_forward_ios_sharp),
-                title: Text('Messaging'),
-                onTap: () {
-                  // Update the state of the app.
-                  // ...
-                },
-              ), ListTile(
                 leading: Icon(Icons.language_sharp),
                 trailing: Icon(Icons.arrow_forward_ios_sharp),
-                title: Text('Change country'),
+                title: Text("change_country".tr()),
                 onTap: () {
-                  // Update the state of the app.
-                  // ...
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LanguageScreen()),
+                  );
                 },
               ),
+              ListTile(
+                leading: Icon(Icons.account_box_outlined),
+                trailing: Icon(Icons.logout),
+                title: Text('Log out'),
+                onTap: _handleSignOut,
+              ),
+
               ///this will be a dialog box
               ListTile(
-                title: Text('About us'),
+                title: Text('About'),
                 onTap: () {
-                  // Update the state of the app.
-                  // ...
+                  showAboutDialog(
+                    context: context,
+                    applicationVersion: '1.1.1',
+                    applicationIcon: Icon(Icons.language_sharp),
+                    applicationLegalese: '©2020 globalnews',
+                    applicationName: 'Global News',
+                  );
                 },
               ),
             ],
@@ -163,9 +227,13 @@ class _HomeState extends State<Home> {
         appBar: AppBar(
           actions: [
             IconButton(
-              icon: const Icon(Icons.add_alert),
+              icon: const Icon(Icons.home),
               tooltip: 'Show Snackbar',
               onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Home()),
+                );
               },
             ),
           ],
@@ -191,7 +259,7 @@ class _HomeState extends State<Home> {
                 children: [
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 12),
-                    height: size.height * .20,
+                    height: size.height * .18,
                     child: ListView.builder(
                       itemCount: categories.length,
                       scrollDirection: Axis.horizontal,
@@ -226,6 +294,43 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+  Future<void> showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('You have been logged out.'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Thank you for visiting!'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _controller.dispose();
+    super.dispose();
+  }
+
 }
 
 class CategoryTile extends StatelessWidget {
@@ -239,7 +344,16 @@ class CategoryTile extends StatelessWidget {
 
     return Material(
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CategoryNews(
+                category: categoryName.toString().toLowerCase(),
+              ),
+            ),
+          );
+        },
         child: Container(
           margin: EdgeInsets.only(right: 10, top: 10),
           child: Stack(
@@ -247,7 +361,7 @@ class CategoryTile extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: FadeInImage(
-                  placeholder: AssetImage("images/gn_no_news_image.png"),
+                  placeholder: AssetImage("images/global_news_no_category_image.png"),
                   image: NetworkImage(
                     imageUrl,
                   ),
@@ -302,7 +416,7 @@ class NewsTile extends StatelessWidget {
               height: 300,
               child: FadeInImage(
                   fit: BoxFit.fitHeight,
-                  placeholder: AssetImage("images/gn_no_news_image.png"),
+                  placeholder: AssetImage("images/global_news_no_article_image.png"),
                   image: NetworkImage(imageUrl)),
             ),
             // Image.asset("images/hivan_no_image.png"),

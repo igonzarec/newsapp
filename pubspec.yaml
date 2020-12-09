@@ -34,10 +34,19 @@ dependencies:
   http: ^0.12.2
   cached_network_image: ^2.3.2+1
   webview_flutter: ^1.0.5
+  firebase_auth: ^0.18.3+1
+  firebase_core: ^0.5.2+1
+  google_sign_in: ^4.5.6
+  easy_localization: ^2.3.3
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  http_proxy: ^1.1.0
+  shared_preferences: ^0.5.12+4
+  dropdown_search: ^0.4.6
+  dio: ^3.0.10
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -52,6 +61,7 @@ flutter:
 
   assets:
     - images/
+    - images/translations/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

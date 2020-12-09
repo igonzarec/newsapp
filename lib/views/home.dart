@@ -379,7 +379,7 @@ class CategoryTile extends StatelessWidget {
                   color: Colors.black26,
                 ),
                 child: Text(
-                  categoryName,
+                  "$categoryName".tr(),
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),

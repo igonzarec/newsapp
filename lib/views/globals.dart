@@ -1,4 +1,4 @@
 library globals;
 
-String language = "de";
+String language = "us";
 String userName = "";

@@ -8,7 +8,7 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:largeHeap="true"
-        android:label="news_app"
+        android:label="Global News"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
